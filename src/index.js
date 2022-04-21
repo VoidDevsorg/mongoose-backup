@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
 const { CronJob } = require('cron');
-var base64 = require('base-64');
 const { Octokit } = require("@octokit/core");
 
 let times = {
@@ -114,7 +113,7 @@ module.exports = class MongoDBackuper {
                                             name: 'Mongoose Backup',
                                             email: 'root@voiddevs.org'
                                         },
-                                        content: base64.encode((JSON.stringify(docs, null, 2)))
+                                        content: Buffer.from(JSON.stringify(docs, null, 2)).toString('base64')
                                     }).then((res) => {
                                         if (res) {
                                             if (_logger) {
@@ -125,7 +124,7 @@ module.exports = class MongoDBackuper {
                                 }, 2000 * index);
                             }
                             catch (err) {
-                                throw new Error(`(mongoose-backup): ${err.message}`);;
+                                throw new Error(`(mongoose-backup): ${collection.name}.json - ${err.message}`);;
                             }
                         });
                     })
