@@ -1,22 +1,33 @@
 {
+  "displayName": "MongoDB Backuper",
   "name": "mongoose-backup",
-  "version": "2.0.2",
+  "version": "2.0.7",
   "description": "It is automatic mongodb data backup with cronjob.",
   "main": "./src/index.js",
   "scripts": {
     "test": "node ./test/index.js"
   },
-  "author": {
-    "name": "clqu",
-    "email": "me@clqu.live"
-  },
+  "authors": [
+    {
+      "name": "clqu",
+      "email": "me@clqu.live"
+    },
+    {
+      "name": "Void Development",
+      "email": "root@voiddevs.org"
+    }
+  ],
   "license": "MIT",
   "dependencies": {
     "@octokit/core": "^3.6.0",
-    "base-64": "^1.0.0",
     "cron": "^1.8.2",
     "fs": "^0.0.1-security",
     "mongoose": "^6.3.0"
+  },
+  "repository": {
+    "directory": "https://github.com/VoidDevsorg/mongoose-backup#guide",
+    "url": "https://github.com/VoidDevsorg/mongoose-backup",
+    "type": "database-backup"
   },
   "keywords": [
     "mongoose",
