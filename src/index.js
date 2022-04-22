@@ -37,7 +37,7 @@ module.exports = class MongoDBackuper {
     localizeBackup({ output, per }) {
         if (!output)
             throw new Error(`(mongoose-backup): output is required.`);
-        if (!output)
+        if (!per)
             throw new Error(`(mongoose-backup): per is required.`);
         try {
             fs.mkdirSync(`./${output.split('/').join('').split('.').join('')}/`);
