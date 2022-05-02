@@ -66,7 +66,7 @@ module.exports = class MongoDBackuper {
                         });
                     })
                     if (_logger) {
-                        console.log(`${new Date()}: (mongoose-backup-[Localize]): A total of ${names.length} collections were backed up. (${output.endsWith('/') ? outputDir : outputDir + '/'}${$Date})`);
+                        console.log(`${new Date()}: (mongoose-backup-[Localize]): A total of ${names.length} collections were backed up. (${output.endsWith('/') ? outputDir : output + '/'}${$Date})`);
                     }
                 });
             }, null, true, _cronLocation);
