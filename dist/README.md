@@ -41,7 +41,7 @@ const Backup = new MongooseBackup({
 | Name  |  Returns |
 |---|---|
 | connected  | Object: url, location |
-| connected  | Object: message, url, location, time |
+| ping  | Object: message, url, location, time |
 | backupError  | String |
 | githubBackup | Object: time, total, items |
 | localizeBackup | Object: time, total, items |

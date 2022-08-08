@@ -1,6 +1,6 @@
 {
   "name": "mongoose-backup",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "It is automatic mongodb data backup with cronjob.",
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
