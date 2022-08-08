@@ -1,33 +1,13 @@
 {
-  "displayName": "MongoDB Backuper",
   "name": "mongoose-backup",
-  "version": "2.0.7",
+  "version": "3.0.0",
   "description": "It is automatic mongodb data backup with cronjob.",
   "main": "./src/index.js",
+  "types": "./src/index.d.ts",
   "scripts": {
-    "test": "node ./test/index.js"
-  },
-  "authors": [
-    {
-      "name": "clqu",
-      "email": "me@clqu.live"
-    },
-    {
-      "name": "Void Development",
-      "email": "root@voiddevs.org"
-    }
-  ],
-  "license": "MIT",
-  "dependencies": {
-    "@octokit/core": "^3.6.0",
-    "cron": "^1.8.2",
-    "fs": "^0.0.1-security",
-    "mongoose": "^6.3.0"
-  },
-  "repository": {
-    "directory": "https://github.com/VoidDevsorg/mongoose-backup#guide",
-    "url": "https://github.com/VoidDevsorg/mongoose-backup",
-    "type": "database-backup"
+    "test": "ts-node --transpile-only ./examples/index.spec.ts",
+    "build": "tsc && npm run copy:files",
+    "copy:files": "cpx \"README.md\" \"dist\""
   },
   "keywords": [
     "mongoose",
@@ -43,5 +23,32 @@
     "github database",
     "github backup",
     "mongodb github"
-  ]
+  ],
+  "authors": [
+    {
+      "name": "clqu",
+      "email": "me@clqu.live"
+    },
+    {
+      "name": "Void Development",
+      "email": "root@voiddevs.org"
+    }
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/VoidDevsorg/mongoose-backup",
+    "homepage": "https://voiddevs.org"
+  },
+  "dependencies": {
+    "@octokit/core": "^4.0.4",
+    "cron": "^2.1.0",
+    "fs": "^0.0.1-security",
+    "mongoose": "^6.5.1"
+  },
+  "devDependencies": {
+    "@types/cron": "^2.0.0",
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.4"
+  }
 }
