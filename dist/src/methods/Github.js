@@ -15,42 +15,35 @@ async function MethodGithub({ key, per, options }) {
             const documents = await this.getDocuments();
             const octokit = new core_1.Octokit({ auth: key });
             const job = new cron_1.CronJob(config_json_1.default.timesForCronJob[per], async () => {
+                let backupValue = [];
+                let maxBackupValue = documents.length;
+                let totalItems = 0;
                 documents.forEach(async (document, index) => {
                     const doc = await this.getDocument(document.name);
-                    const i = setInterval(async () => {
-                        const rateLimit = await octokit.request("GET /rate_limit");
-                        const remaining = rateLimit.data.resources.core.remaining;
-                        const limit = rateLimit.data.resources.core.limit;
-                        const reset = rateLimit.data.resources.core.reset;
-                        const used = limit - remaining;
-                        const percent = Math.round((used / limit) * 100);
-                        this.emit("rateLimit", {
-                            remaining,
-                            limit,
-                            reset,
-                            used,
-                            percent
-                        });
-                    }, 60000);
-                    const ii = setInterval(async () => {
-                        const rateLimit = await octokit.request("GET /rate_limit");
-                        const remaining = rateLimit.data.resources.core.remaining;
-                        if (remaining > 0) {
-                            const fileName = `${new Date().toLocaleDateString()}-${new Date().toLocaleTimeString()}`;
-                            const res = await octokit.request("PUT /repos/{owner}/{repo}/contents/{path}", {
-                                owner: options.owner,
-                                repo: options.repo,
-                                path: `.backuper/${fileName}/${document.name}.json`,
-                                message: `Backuped ${document.name}.json with ${doc?.length || 0} items.`,
-                                content: Buffer.from(JSON.stringify(doc, null, 2)).toString("base64"),
-                                committer: {
-                                    name: "Mongoose Backup",
-                                    email: "root@voiddevs.org"
-                                }
-                            });
-                            if (index === documents.length - 1) {
-                                clearInterval(i);
-                                clearInterval(ii);
+                    const fileName = `${new Date().toLocaleDateString()}-${new Date().getHours()}:${new Date().getMinutes()}`;
+                    async function backup() {
+                        return await octokit.request("PUT /repos/{owner}/{repo}/contents/{path}", {
+                            owner: options.owner,
+                            repo: options.repo,
+                            path: `.backuper/${fileName}/${document.name}.json`,
+                            message: `Backuped ${document.name}.json with ${doc?.length || 0} items.`,
+                            content: Buffer.from(JSON.stringify(doc, null, 2)).toString("base64"),
+                            committer: {
+                                name: "Mongoose Backup",
+                                email: "root@voiddevs.org"
+                            }
+                        }).then(() => {
+                            if (!backupValue.includes(document.name)) {
+                                backupValue.push(document.name);
+                                totalItems += doc?.length || 0;
+                            }
+                            return true;
+                        }).catch(() => false);
+                    }
+                    while (true) {
+                        const res = await backup();
+                        if (res) {
+                            if (backupValue.length === maxBackupValue) {
                                 this.emit("githubBackup", {
                                     message: `Github Backup is done.`,
                                     location: this.location || "Europe/Istanbul",
@@ -58,11 +51,12 @@ async function MethodGithub({ key, per, options }) {
                                     url: this.url || "Empty",
                                     time: new Date(),
                                     total: documents.length,
-                                    items: doc.length
+                                    items: totalItems || 0
                                 });
                             }
+                            break;
                         }
-                    }, 1000);
+                    }
                 });
             }, null, true, this.location);
             job.start();
